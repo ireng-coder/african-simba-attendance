@@ -11,21 +11,24 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('terminal');
   const [staffList, setStaffList] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState(null);
-  const [actionType, setActionType] = useState('CHECK_IN'); // 'CHECK_IN' or 'CHECK_OUT'
+  const [actionType, setActionType] = useState('CHECK_IN'); 
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState(null);
   const [checkIns, setCheckIns] = useState([]);
+
+  /* --- ADMIN SECURITY STATE --- */
+  const [isAdminUnlocked, setIsAdminUnlocked] = useState(false);
+  const [adminPinInput, setAdminPinInput] = useState('');
+  const ADMIN_PIN = '4321'; // Admin PIN code
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-    // 1. Fetch staff list
     const { data: staffData } = await supabase.from('staff').select('*');
     if (staffData) setStaffList(staffData);
 
-    // 2. Fetch logs with joined staff relation
     const { data: logData, error } = await supabase
       .from('attendance_logs')
       .select('*, staff(*)')
@@ -81,7 +84,16 @@ export default function App() {
     setLoading(false);
   };
 
-  // The URL that the single master QR code will point to (current window location)
+  const handleAdminLogin = (e) => {
+    e.preventDefault();
+    if (adminPinInput === ADMIN_PIN) {
+      setIsAdminUnlocked(true);
+      setStatusMessage(null);
+    } else {
+      setStatusMessage({ type: 'error', text: 'Incorrect Admin PIN Code.' });
+    }
+  };
+
   const masterQrUrl = typeof window !== 'undefined' ? window.location.href : '';
 
   return (
@@ -128,8 +140,6 @@ export default function App() {
             <p style={{ color: '#64748b', marginBottom: '1.5rem', textAlign: 'center' }}>Select your name and choose whether you are checking in or out.</p>
 
             <form onSubmit={handleSubmitAttendance} style={{ maxWidth: '500px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.25rem', boxSizing: 'border-box' }}>
-              
-              {/* Action Selector: Check In vs Check Out */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', color: '#334155', marginBottom: '0.5rem' }}>Action Type</label>
                 <div style={{ display: 'flex', gap: '1rem' }}>
@@ -181,7 +191,7 @@ export default function App() {
         ) : activeTab === 'masterQR' ? (
           <div style={{ backgroundColor: '#ffffff', padding: '2.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', textAlign: 'center', maxWidth: '600px', margin: '0 auto', boxSizing: 'border-box' }}>
             <h2 style={{ fontSize: '1.75rem', color: '#0f172a', marginBottom: '0.5rem' }}>
-              African Simba Events Entrance
+              African Simba Events
             </h2>
             <p style={{ color: '#64748b', marginBottom: '2rem' }}>Scan this master QR code using your phone camera to open the attendance terminal and log your check-in or check-out.</p>
 
@@ -194,58 +204,89 @@ export default function App() {
             </div>
           </div>
         ) : (
+          /* --- ADMIN LOGS TAB WITH PIN LOCK --- */
           <div style={{ backgroundColor: '#ffffff', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', boxSizing: 'border-box' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-              <h2 style={{ fontSize: '1.5rem', color: '#1e293b', margin: 0 }}>
-                Live Attendance Logs
-              </h2>
-              <button onClick={fetchData} style={{ background: '#f1f5f9', border: '1px solid #cbd5e1', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600' }}>
-                🔄 Refresh Logs
-              </button>
-            </div>
+            {!isAdminUnlocked ? (
+              <div style={{ maxWidth: '400px', margin: '2rem auto', textAlign: 'center' }}>
+                <h2 style={{ fontSize: '1.5rem', color: '#1e293b', marginBottom: '0.5rem' }}>🔒 Restricted Admin Access</h2>
+                <p style={{ color: '#64748b', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Please enter the admin PIN code to view live attendance logs.</p>
+                
+                <form onSubmit={handleAdminLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <input 
+                    type="password" 
+                    placeholder="Enter Admin PIN"
+                    value={adminPinInput}
+                    onChange={(e) => setAdminPinInput(e.target.value)}
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem', boxSizing: 'border-box', textAlign: 'center' }}
+                  />
+                  <button 
+                    type="submit"
+                    style={{ backgroundColor: '#3b82f6', color: '#ffffff', padding: '0.75rem', borderRadius: '8px', border: 'none', fontSize: '1rem', fontWeight: '600', cursor: 'pointer' }}
+                  >
+                    Unlock Admin Logs
+                  </button>
+                </form>
+              </div>
+            ) : (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+                  <h2 style={{ fontSize: '1.5rem', color: '#1e293b', margin: 0 }}>
+                    Live Attendance Logs
+                  </h2>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button onClick={fetchData} style={{ background: '#f1f5f9', border: '1px solid #cbd5e1', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600' }}>
+                      🔄 Refresh Logs
+                    </button>
+                    <button onClick={() => setIsAdminUnlocked(false)} style={{ background: '#fee2e2', border: '1px solid #fecaca', color: '#991b1b', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600' }}>
+                      🔒 Lock Admin
+                    </button>
+                  </div>
+                </div>
 
-            <div style={{ overflowX: 'auto', width: '100%' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '400px' }}>
-                <thead>
-                  <tr style={{ borderBottom: '2px solid #e2e8f0', color: '#475569', fontSize: '0.85rem' }}>
-                    <th style={{ padding: '0.75rem' }}>Staff Name</th>
-                    <th style={{ padding: '0.75rem' }}>Action</th>
-                    <th style={{ padding: '0.75rem' }}>Timestamp</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {checkIns.length === 0 ? (
-                    <tr>
-                      <td colSpan="3" style={{ padding: '1.5rem', textAlign: 'center', color: '#94a3b8' }}>No attendance records found yet.</td>
-                    </tr>
-                  ) : (
-                    checkIns.map((record) => {
-                      const isIn = record.action === 'CHECK_IN';
-                      return (
-                        <tr key={record.id} style={{ borderBottom: '1px solid #f1f5f9', fontSize: '0.9rem', color: '#334155' }}>
-                          <td style={{ padding: '0.75rem', fontWeight: '600', color: '#0f172a' }}>
-                            {getStaffName(record.staff, record.staff_id)}
-                          </td>
-                          <td style={{ padding: '0.75rem' }}>
-                            <span style={{ 
-                              padding: '0.25rem 0.5rem', 
-                              borderRadius: '4px', 
-                              fontSize: '0.75rem', 
-                              fontWeight: 'bold',
-                              backgroundColor: isIn ? '#dcfce7' : '#fee2e2',
-                              color: isIn ? '#166534' : '#991b1b'
-                            }}>
-                              {record.action}
-                            </span>
-                          </td>
-                          <td style={{ padding: '0.75rem', whiteSpace: 'nowrap' }}>{new Date(record.timestamp).toLocaleString()}</td>
+                <div style={{ overflowX: 'auto', width: '100%' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '400px' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '2px solid #e2e8f0', color: '#475569', fontSize: '0.85rem' }}>
+                        <th style={{ padding: '0.75rem' }}>Staff Name</th>
+                        <th style={{ padding: '0.75rem' }}>Action</th>
+                        <th style={{ padding: '0.75rem' }}>Timestamp</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {checkIns.length === 0 ? (
+                        <tr>
+                          <td colSpan="3" style={{ padding: '1.5rem', textAlign: 'center', color: '#94a3b8' }}>No attendance records found yet.</td>
                         </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
+                      ) : (
+                        checkIns.map((record) => {
+                          const isIn = record.action === 'CHECK_IN';
+                          return (
+                            <tr key={record.id} style={{ borderBottom: '1px solid #f1f5f9', fontSize: '0.9rem', color: '#334155' }}>
+                              <td style={{ padding: '0.75rem', fontWeight: '600', color: '#0f172a' }}>
+                                {getStaffName(record.staff, record.staff_id)}
+                              </td>
+                              <td style={{ padding: '0.75rem' }}>
+                                <span style={{ 
+                                  padding: '0.25rem 0.5rem', 
+                                  borderRadius: '4px', 
+                                  fontSize: '0.75rem', 
+                                  fontWeight: 'bold',
+                                  backgroundColor: isIn ? '#dcfce7' : '#fee2e2',
+                                  color: isIn ? '#166534' : '#991b1b'
+                                }}>
+                                  {record.action}
+                                </span>
+                              </td>
+                              <td style={{ padding: '0.75rem', whiteSpace: 'nowrap' }}>{new Date(record.timestamp).toLocaleString()}</td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </main>
