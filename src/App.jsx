@@ -186,7 +186,7 @@ export default function App() {
             <p style={{ color: '#64748b', marginBottom: '2rem' }}>Scan this master QR code using your phone camera to open the attendance terminal and log your check-in or check-out.</p>
 
             <div style={{ background: '#fff', padding: '2rem', borderRadius: '12px', border: '2px dashed #cbd5e1', display: 'inline-block', marginBottom: '1.5rem', maxWidth: '100%', boxSizing: 'border-box' }}>
-              <QRCodeSVG value={masterQrUrl} size={220} style={{ maxWidth: '100%', height: 'auto' }} />
+              <QRCodeSVG value={masterQrUrl} size={220} level="H" includeMargin={true} style={{ maxWidth: '100%', height: 'auto' }} />
             </div>
 
             <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', wordBreak: 'break-all', fontSize: '0.85rem', color: '#475569', boxSizing: 'border-box' }}>
