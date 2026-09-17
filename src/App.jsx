@@ -87,32 +87,32 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f8fafc', display: 'flex', flexDirection: 'column', fontFamily: 'sans-serif', overflowX: 'hidden', width: '100%', boxSizing: 'border-box' }}>
       {/* Header */}
-      <header style={{ backgroundColor: '#0f172a', color: '#ffffff', padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', flexWrap: 'wrap', gap: '1rem', boxSizing: 'border-box' }}>
+      <header style={{ backgroundColor: '#0f172a', color: '#ffffff', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', flexWrap: 'wrap', gap: '1rem', boxSizing: 'border-box' }}>
         <div>
-          <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: 0 }}>African Simba Events</h1>
+          <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: 0, color: '#ffffff' }}>African Simba Events</h1>
           <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: 0 }}>Gate Attendance & QR Terminal</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <button 
             onClick={() => setActiveTab('terminal')}
-            style={{ padding: '0.5rem 0.75rem', borderRadius: '6px', border: 'none', backgroundColor: activeTab === 'terminal' ? '#3b82f6' : 'transparent', color: '#ffffff', cursor: 'pointer', fontWeight: '500', fontSize: '0.85rem' }}>
-            📲 Terminal
+            style={{ padding: '0.5rem 1rem', borderRadius: '6px', border: 'none', backgroundColor: activeTab === 'terminal' ? '#3b82f6' : 'transparent', color: '#ffffff', cursor: 'pointer', fontWeight: '500' }}>
+            📲 Gate Terminal
           </button>
           <button 
             onClick={() => setActiveTab('masterQR')}
-            style={{ padding: '0.5rem 0.75rem', borderRadius: '6px', border: 'none', backgroundColor: activeTab === 'masterQR' ? '#3b82f6' : 'transparent', color: '#ffffff', cursor: 'pointer', fontWeight: '500', fontSize: '0.85rem' }}>
-            🖨️ QR Poster
+            style={{ padding: '0.5rem 1rem', borderRadius: '6px', border: 'none', backgroundColor: activeTab === 'masterQR' ? '#3b82f6' : 'transparent', color: '#ffffff', cursor: 'pointer', fontWeight: '500' }}>
+            🖨️ Master QR Poster
           </button>
           <button 
             onClick={() => setActiveTab('admin')}
-            style={{ padding: '0.5rem 0.75rem', borderRadius: '6px', border: 'none', backgroundColor: activeTab === 'admin' ? '#3b82f6' : 'transparent', color: '#ffffff', cursor: 'pointer', fontWeight: '500', fontSize: '0.85rem' }}>
-            📊 Logs
+            style={{ padding: '0.5rem 1rem', borderRadius: '6px', border: 'none', backgroundColor: activeTab === 'admin' ? '#3b82f6' : 'transparent', color: '#ffffff', cursor: 'pointer', fontWeight: '500' }}>
+            📊 Admin Logs
           </button>
         </div>
       </header>
 
       {/* Main Content Area */}
-      <main style={{ flex: 1, padding: '1rem', maxWidth: '900px', width: '100%', margin: '0 auto', boxSizing: 'border-box' }}>
+      <main style={{ flex: 1, padding: '2rem', maxWidth: '900px', width: '100%', margin: '0 auto', boxSizing: 'border-box' }}>
         {statusMessage && (
           <div style={{ padding: '1rem', marginBottom: '1.5rem', borderRadius: '8px', backgroundColor: statusMessage.type === 'success' ? '#dcfce7' : '#fee2e2', color: statusMessage.type === 'success' ? '#166534' : '#991b1b', display: 'flex', alignItems: 'center', gap: '0.75rem', border: `1px solid ${statusMessage.type === 'success' ? '#bbf7d0' : '#fecaca'}`, boxSizing: 'border-box' }}>
             <span style={{ fontWeight: 'bold' }}>{statusMessage.type === 'success' ? '✓' : '⚠️'}</span>
@@ -121,11 +121,11 @@ export default function App() {
         )}
 
         {activeTab === 'terminal' ? (
-          <div style={{ backgroundColor: '#ffffff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', boxSizing: 'border-box' }}>
-            <h2 style={{ fontSize: '1.35rem', color: '#1e293b', marginBottom: '0.5rem', textAlign: 'center' }}>
+          <div style={{ backgroundColor: '#ffffff', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', boxSizing: 'border-box' }}>
+            <h2 style={{ fontSize: '1.5rem', color: '#1e293b', marginBottom: '0.5rem', textAlign: 'center' }}>
               Staff Gate Terminal
             </h2>
-            <p style={{ color: '#64748b', marginBottom: '1.5rem', textAlign: 'center', fontSize: '0.9rem' }}>Select your name and choose whether you are checking in or out.</p>
+            <p style={{ color: '#64748b', marginBottom: '1.5rem', textAlign: 'center' }}>Select your name and choose whether you are checking in or out.</p>
 
             <form onSubmit={handleSubmitAttendance} style={{ maxWidth: '500px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.25rem', boxSizing: 'border-box' }}>
               
@@ -179,24 +179,24 @@ export default function App() {
             </form>
           </div>
         ) : activeTab === 'masterQR' ? (
-          <div style={{ backgroundColor: '#ffffff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', textAlign: 'center', maxWidth: '600px', margin: '0 auto', boxSizing: 'border-box' }}>
-            <h2 style={{ fontSize: '1.5rem', color: '#0f172a', marginBottom: '0.5rem' }}>
+          <div style={{ backgroundColor: '#ffffff', padding: '2.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', textAlign: 'center', maxWidth: '600px', margin: '0 auto', boxSizing: 'border-box' }}>
+            <h2 style={{ fontSize: '1.75rem', color: '#0f172a', marginBottom: '0.5rem' }}>
               African Simba Events Entrance
             </h2>
-            <p style={{ color: '#64748b', marginBottom: '1.5rem', fontSize: '0.9rem' }}>Scan this master QR code using your phone camera to open the attendance terminal and log your check-in or check-out.</p>
+            <p style={{ color: '#64748b', marginBottom: '2rem' }}>Scan this master QR code using your phone camera to open the attendance terminal and log your check-in or check-out.</p>
 
-            <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', border: '2px dashed #cbd5e1', display: 'inline-block', marginBottom: '1.5rem', maxWidth: '100%', boxSizing: 'border-box' }}>
-              <QRCodeSVG value={masterQrUrl} size={200} style={{ maxWidth: '100%', height: 'auto' }} />
+            <div style={{ background: '#fff', padding: '2rem', borderRadius: '12px', border: '2px dashed #cbd5e1', display: 'inline-block', marginBottom: '1.5rem', maxWidth: '100%', boxSizing: 'border-box' }}>
+              <QRCodeSVG value={masterQrUrl} size={220} style={{ maxWidth: '100%', height: 'auto' }} />
             </div>
 
-            <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', wordBreak: 'break-all', fontSize: '0.8rem', color: '#475569', boxSizing: 'border-box' }}>
+            <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', border: '1px solid #e2e8f0', wordBreak: 'break-all', fontSize: '0.85rem', color: '#475569', boxSizing: 'border-box' }}>
               Terminal URL: {masterQrUrl}
             </div>
           </div>
         ) : (
-          <div style={{ backgroundColor: '#ffffff', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', boxSizing: 'border-box' }}>
+          <div style={{ backgroundColor: '#ffffff', padding: '2rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0', boxSizing: 'border-box' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-              <h2 style={{ fontSize: '1.35rem', color: '#1e293b', margin: 0 }}>
+              <h2 style={{ fontSize: '1.5rem', color: '#1e293b', margin: 0 }}>
                 Live Attendance Logs
               </h2>
               <button onClick={fetchData} style={{ background: '#f1f5f9', border: '1px solid #cbd5e1', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600' }}>
@@ -205,7 +205,7 @@ export default function App() {
             </div>
 
             <div style={{ overflowX: 'auto', width: '100%' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '350px' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '400px' }}>
                 <thead>
                   <tr style={{ borderBottom: '2px solid #e2e8f0', color: '#475569', fontSize: '0.85rem' }}>
                     <th style={{ padding: '0.75rem' }}>Staff Name</th>
@@ -222,7 +222,7 @@ export default function App() {
                     checkIns.map((record) => {
                       const isIn = record.action === 'CHECK_IN';
                       return (
-                        <tr key={record.id} style={{ borderBottom: '1px solid #f1f5f9', fontSize: '0.85rem', color: '#334155' }}>
+                        <tr key={record.id} style={{ borderBottom: '1px solid #f1f5f9', fontSize: '0.9rem', color: '#334155' }}>
                           <td style={{ padding: '0.75rem', fontWeight: '600', color: '#0f172a' }}>
                             {getStaffName(record.staff, record.staff_id)}
                           </td>
@@ -230,7 +230,7 @@ export default function App() {
                             <span style={{ 
                               padding: '0.25rem 0.5rem', 
                               borderRadius: '4px', 
-                              fontSize: '0.7rem', 
+                              fontSize: '0.75rem', 
                               fontWeight: 'bold',
                               backgroundColor: isIn ? '#dcfce7' : '#fee2e2',
                               color: isIn ? '#166534' : '#991b1b'
